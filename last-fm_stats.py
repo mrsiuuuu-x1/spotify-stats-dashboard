@@ -72,21 +72,30 @@ tag_counts = []
 for t in tags:
     tag_counts.append(int(t['count']))
 
-fig = make_subplots(rows=3, cols=1,
-                    subplot_titles=("Your Top Tracks", "Your Top Artists", "Your Top Genres"),
-                    specs=[[{"type": "bar"}], [{"type": "bar"}], [{"type": "pie"}]])
+# make charts
+fig = make_subplots(
+    rows=3,
+    cols=1,
+    subplot_titles=("Your Top Tracks", "Your Top Artists", "Your Top Genres"),
+    specs=[
+        [{"type": "bar"}],
+        [{"type": "bar"}],
+        [{"type": "pie"}]
+    ]
+)
 
-fig.add_trace(go.Bar(x=track_names, y=track_plays,
-                     marker_color='SteelBlue', name='Tracks'), row=1, col=1)
+top_tracks_bar = go.Bar(x=track_names, y=track_plays, marker_color='SteelBlue', name='Tracks')
+top_artists_bar = go.Bar(x=artist_names, y=artist_plays, marker_color='MediumSeaGreen', name='Artists')
+top_genres_pie = go.Pie(labels=tag_names, values=tag_counts, name='Genres')
 
-fig.add_trace(go.Bar(x=artist_names, y=artist_plays,
-                     marker_color='MediumSeaGreen', name='Artists'), row=2, col=1)
+fig.add_trace(top_tracks_bar, row=1, col=1)
+fig.add_trace(top_artists_bar, row=2, col=1)
+fig.add_trace(top_genres_pie, row=3, col=1)
 
-fig.add_trace(go.Pie(labels=tag_names, values=tag_counts,
-                     name='Genres'), row=3, col=1)
-
-fig.update_layout(height=1200, title_text="Your Music Dashboard",
-                  title_font_size=28, showlegend=False)
-
-fig.write_html("dashboard.html", include_plotlyjs='cdn')
+fig.update_layout(
+    height=1200,
+    title_text="Your Music Dashboard",
+    title_font_size=28,
+    showlegend=False
+)
 print("Dashboard saved! Open dashboard.html")
